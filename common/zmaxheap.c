@@ -34,12 +34,12 @@ either expressed or implied, of the Regents of The University of Michigan.
 
 #include "zmaxheap.h"
 
-#ifdef _WIN32
+//#ifdef _WIN32 -- call to random() throws error when compiling as AFR component
 static inline long int random(void)
 {
         return rand();
 }
-#endif
+//#endif
 
 //                 0
 //         1               2

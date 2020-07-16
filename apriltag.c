@@ -58,7 +58,8 @@ either expressed or implied, of the Regents of The University of Michigan.
 # define M_PI 3.141592653589793238462643383279502884196
 #endif
 
-#ifdef _WIN32
+//#ifdef _WIN32 --srandom() and random() throws errors when apriltag is compiled
+//as AFR component.
 static inline void srandom(unsigned int seed)
 {
         srand(seed);
@@ -68,7 +69,7 @@ static inline long int random(void)
 {
         return rand();
 }
-#endif
+//#endif
 
 #define APRILTAG_U64_ONE ((uint64_t) 1)
 
