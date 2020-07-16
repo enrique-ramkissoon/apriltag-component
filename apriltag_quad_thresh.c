@@ -44,12 +44,12 @@ either expressed or implied, of the Regents of The University of Michigan.
 #include "common/postscript_utils.h"
 #include "common/math_util.h"
 
-#ifdef _WIN32
+//#ifdef _WIN32 -- Make sure random() is redefined as rand()
 static inline long int random(void)
 {
         return rand();
 }
-#endif
+//#endif
 
 static inline uint32_t u64hash_2(uint64_t x) {
     return (2654435761 * x) >> 32;
