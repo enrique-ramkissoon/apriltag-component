@@ -66,7 +66,11 @@ struct pjpeg_decode_state
     // 15 bits are, we would get the correct decode.
     //
     // Can be up to 8 tables; computed as (ACDC * 2 + htidx)
-    struct pjpeg_huffman_code huff_codes[4][65536];
+      
+
+    //struct pjpeg_huffman_code huff_codes[4][65536]; //REMOVED
+    struct pjpeg_huffman_code** huff_codes;
+
     int huff_codes_present[4];
 
     uint8_t  qtab[4][64];
@@ -423,6 +427,7 @@ static int pjpeg_decode_buffer(struct pjpeg_decode_state *pjd)
                                 return PJPEG_ERR_DHT;
 
                             for (int ci = 0; ci < ncodes; ci++) {
+                                //printf("%i,%i\n",htidx,code_pos);
                                 pjd->huff_codes[htidx][code_pos].nbits = nbits;
                                 pjd->huff_codes[htidx][code_pos].code = code;
                                 code_pos++;
@@ -850,7 +855,14 @@ pjpeg_t *pjpeg_create_from_file(const char *path, uint32_t flags, int *error)
 pjpeg_t *pjpeg_create_from_buffer(uint8_t *buf, int buflen, uint32_t flags, int *error)
 {
     struct pjpeg_decode_state pjd;
+
     memset(&pjd, 0, sizeof(pjd));
+
+    pjd.huff_codes = (struct pjpeg_huffman_code**)malloc(4*sizeof(struct pjpeg_huffman_code*));
+    for(int i=0;i<4;i++)
+    {
+      pjd.huff_codes[i] = (struct pjpeg_huffman_code*)malloc(65536*sizeof(struct pjpeg_huffman_code));
+    }
 
     if (flags & PJPEG_MJPEG) {
         pjd.in = mjpeg_dht;
@@ -874,6 +886,13 @@ pjpeg_t *pjpeg_create_from_buffer(uint8_t *buf, int buflen, uint32_t flags, int 
 
         return NULL;
     }
+
+    //FREE HUFF_CODES ARRAY
+    for(int i=0;i<4;i++)
+    {
+        free(pjd.huff_codes[i]);
+    }
+    free(pjd.huff_codes);
 
     pjpeg_t *pj = calloc(1, sizeof(pjpeg_t));
 

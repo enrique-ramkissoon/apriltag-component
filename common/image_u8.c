@@ -37,7 +37,7 @@ either expressed or implied, of the Regents of The University of Michigan.
 
 // least common multiple of 64 (sandy bridge cache line) and 24 (stride
 // needed for RGB in 8-wide vector processing)
-#define DEFAULT_ALIGNMENT_U8 96
+#define DEFAULT_ALIGNMENT_U8 32 // CHANGED TO 32 TO MAKE STRIDE = WIDTH
 
 image_u8_t *image_u8_create_stride(unsigned int width, unsigned int height, unsigned int stride)
 {
